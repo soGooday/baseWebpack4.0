@@ -54,6 +54,9 @@ div {
   background-image: url("/assets/images/bg.png");
   background-repeat: no-repeat;
   background-size: cover;
-  transform: scale(1);
+  -webkit-transform: scale(1);
+          transform: scale(1);
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex; }
 

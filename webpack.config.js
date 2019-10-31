@@ -23,7 +23,9 @@ module.exports={
         //     filename: "css/index.css",
         // }),
         // new ExtractTextPlugin('css/index.css'),
-        new MiniCssExtractPlugin(),
+        new MiniCssExtractPlugin({
+          filename:'index.css'
+        }),
         new CopyWebpackPlugin([
             {
               from: './src/assets/images',
@@ -44,12 +46,7 @@ module.exports={
                 loader: 'babel-loader'
               }
         ,
-            {
-                // test: /\.css$/,
-                // use:ExtractTextPlugin.extract({
-                //     fallback:"style-loader",
-                //     use:"css-loader"
-                // })
+            { 
                 test: /\.css/,
                 include: [
                   path.resolve(__dirname, 'src'),
@@ -67,7 +64,18 @@ module.exports={
                   MiniCssExtractPlugin.loader,
                   // 'style-loader',
                   'css-loader',
-                  "sass-loader"
+               
+                  {
+                    loader:'postcss-loader',
+                    options:{
+                      plugins: () => [
+                        require('autoprefixer')({
+                          overrideBrowserslist:['last 2 version', '>1%'  ]
+                        })
+                      ]
+                    }
+                  },
+                  "sass-loader",
                   // {
                   //   loader: "style-loader" // 将 JS 字符串生成为 style 节点
                   // },
@@ -78,7 +86,18 @@ module.exports={
                   //   loader: "sass-loader" // 将 Sass 编译成 CSS
                   // }
                 ]
-              } 
+              },
+              {
+                test: /\.(png|jpg|gif)$/,
+                use: [
+                  {
+                    loader: 'url-loader',
+                    options: {
+                      limit: 100
+                    }
+                  }
+                ]
+              }
         ] 
     },
     devServer: {
