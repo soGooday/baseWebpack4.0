@@ -1,0 +1,9 @@
+@import 'src/assets/scss/rem.scss';
+
+div{
+    color: aqua
+}
+#imageBox{
+    @include aWHU(750,1334); 
+    @include setBg('/assets/images/bg.png') 
+}
