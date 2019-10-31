@@ -4,7 +4,7 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin') 
 const CopyWebpackPlugin = require('copy-webpack-plugin')
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
+// const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 
 module.exports={
@@ -22,7 +22,8 @@ module.exports={
         // new MiniCssExtractPlugin({
         //     filename: "css/index.css",
         // }),
-        new ExtractTextPlugin('css/index.css'),
+        // new ExtractTextPlugin('css/index.css'),
+        new MiniCssExtractPlugin(),
         new CopyWebpackPlugin([
             {
               from: './src/assets/images',
@@ -44,24 +45,38 @@ module.exports={
               }
         ,
             {
-                test: /\.css$/,
-                use:ExtractTextPlugin.extract({
-                    fallback:"style-loader",
-                    use:"css-loader"
-                })
+                // test: /\.css$/,
+                // use:ExtractTextPlugin.extract({
+                //     fallback:"style-loader",
+                //     use:"css-loader"
+                // })
+                test: /\.css/,
+                include: [
+                  path.resolve(__dirname, 'src'),
+                ],
+                use: [
+                  MiniCssExtractPlugin.loader,
+                  // 'style-loader',
+                  'css-loader',
+                ], 
+               
             },
             {
                 test: /\.scss$/,
                 use: [
-                  {
-                    loader: "style-loader" // 将 JS 字符串生成为 style 节点
-                  },
-                  {
-                    loader: "css-loader" // 将 CSS 转化成 CommonJS 模块
-                  },
-                  {
-                    loader: "sass-loader" // 将 Sass 编译成 CSS
-                  }
+                  MiniCssExtractPlugin.loader,
+                  // 'style-loader',
+                  'css-loader',
+                  "sass-loader"
+                  // {
+                  //   loader: "style-loader" // 将 JS 字符串生成为 style 节点
+                  // },
+                  // {
+                  //   loader: "css-loader" // 将 CSS 转化成 CommonJS 模块
+                  // },
+                  // {
+                  //   loader: "sass-loader" // 将 Sass 编译成 CSS
+                  // }
                 ]
               } 
         ] 

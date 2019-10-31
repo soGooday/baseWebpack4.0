@@ -5,5 +5,7 @@ div{
 }
 #imageBox{
     @include aWHU(750,1334); 
-    @include setBg('/assets/images/bg.png') 
+    @include setBg('/assets/images/bg.png');
+    transform: scale(1);
+    display: flex;
 }

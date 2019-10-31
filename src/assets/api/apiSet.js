@@ -8,7 +8,7 @@ const baseURL = process.env.NODE_ENV !== 'production' ? 'https://adv.api.venomli
 const openID = GetRequestKey('openid');
 
 export function setHttp(url,type,obj = null,BACK,ERROR){
-    var _openID = openID || this.GetRequestKey('openid');//设置openID
+    var _openID = openID || GetRequestKey('openid');//设置openID
     $.ajax({
         url: baseURL+url,
         type: type,
