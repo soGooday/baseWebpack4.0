@@ -3,16 +3,19 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin') 
 const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin') 
-const CopyWebpackPlugin = require('copy-webpack-plugin')
-// const ExtractTextPlugin = require("extract-text-webpack-plugin");
-
-
+// const CopyWebpackPlugin = require('copy-webpack-plugin') 
+// const vConsolePlugin = require('vconsole-webpack-plugin');
+const envTypeDist = process.env.NODE_ENV === 'development' ? 'dist.test/dist' : 'dist.prod/dist';//打包地址的设置
+const envType = process.env.NODE_ENV === 'development' ? 'development' : 'production';//设置当前的环境
+console.log('我们当前的环境是：',envType);
 module.exports={
     entry:'./src/index.js',
     output:{
         filename:'index.js',
-        path:path.resolve(__dirname,'dist')
+        path:path.resolve(__dirname,envTypeDist)
     },
+    // mode:envType,
+    // mode:'development',
     plugins:[
         new HtmlWebpackPlugin({
             filename:'index.html',
@@ -26,16 +29,20 @@ module.exports={
         new MiniCssExtractPlugin({
           filename:'index.css'
         }),
-        new CopyWebpackPlugin([
-            {
-              from: './src/assets/images',
-              to: './assets/images',
-              ignore: ['.*']
-            }
-        ]),
+        // new CopyWebpackPlugin([
+        //     {
+        //       from: './src/assets/images',
+        //       to: './assets/images',
+        //       ignore: ['.*']
+        //     }
+        // ]),
         new webpack.ProvidePlugin({
             $: 'zepto-webpack'
-        })
+        }),
+      //   new vConsolePlugin({
+      //     filter: [],  // 需要过滤的入口文件
+      //     enable: true // 发布代码前记得改回 false
+      // }),
   
     ],
     module:{
@@ -52,8 +59,7 @@ module.exports={
                   path.resolve(__dirname, 'src'),
                 ],
                 use: [
-                  MiniCssExtractPlugin.loader,
-                  // 'style-loader',
+                  MiniCssExtractPlugin.loader, 
                   'css-loader',
                 ], 
                
@@ -61,10 +67,16 @@ module.exports={
             {
                 test: /\.scss$/,
                 use: [
-                  MiniCssExtractPlugin.loader,
-                  // 'style-loader',
-                  'css-loader',
-               
+                  MiniCssExtractPlugin.loader, 
+              
+                  'css-loader', 
+                  // {
+                  //   loader: 'px2rem-loader',
+                  //   options:{
+                  //     remUnit: 75,
+                  //     remPrecesion:8
+                  //   }
+                  // },
                   {
                     loader:'postcss-loader',
                     options:{
@@ -75,26 +87,14 @@ module.exports={
                       ]
                     }
                   },
-                  "sass-loader",
-                  // {
-                  //   loader: "style-loader" // 将 JS 字符串生成为 style 节点
-                  // },
-                  // {
-                  //   loader: "css-loader" // 将 CSS 转化成 CommonJS 模块
-                  // },
-                  // {
-                  //   loader: "sass-loader" // 将 Sass 编译成 CSS
-                  // }
+                  "sass-loader",  
                 ]
               },
               {
                 test: /\.(png|jpg|gif)$/,
                 use: [
                   {
-                    loader: 'url-loader',
-                    options: {
-                      limit: 100
-                    }
+                    loader: 'url-loader?limit=10&name=assets/images/[name].[ext]',  
                   }
                 ]
               }
@@ -104,8 +104,7 @@ module.exports={
         //设置基本结构
         // contentBase: path.resolve(__dirname, './dist'),
         contentBase: path.resolve(__dirname, './src/'),//这个很关键他是决定打开文件之后从那个页面座位主页面
-        host: 'localhost',//服务器IP地址,可以是localhost
-        compress: true,//服务端压缩是否开启
+        host: 'localhost',//服务器IP地址,可以是localhost 
         open: true,// 自动打开浏览器
         hot: true ,// 开启热更新 
       } 

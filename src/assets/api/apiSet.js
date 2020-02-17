@@ -2,17 +2,18 @@
 
 //使用ajax 引用zepto
 import $ from '../../../node_modules/zepto-webpack/zepto.js'
+import URLiNFO from '../../config/index.js'
 // //设置当前的url
-const baseURL = process.env.NODE_ENV !== 'production' ? 'https://adv.api.venomlipstick.cn' : 'https://t-adv.api.venomlipstick.cn';//链接地址;
+const baseURL = process.env.NODE_ENV === 'development' ? URLiNFO.TEST_URL : URLiNFO.PROD_URL;//链接地址;
 // //设置openID
-const openID = GetRequestKey('openid');
+const openID = GetRequestKey(URLiNFO.HEAD_KEY);
 
 export function setHttp(url,type,obj = null,BACK,ERROR){
-    var _openID = openID || GetRequestKey('openid');//设置openID
+    var _openID = openID || GetRequestKey(URLiNFO.HEAD_KEY);//设置openID
     $.ajax({
         url: baseURL+url,
         type: type,
-        data: JSON.stringify(obj),
+        data: type === 'GET' ? obj : JSON.stringify(obj),//GET 与POST
         dataType: 'json',
         crossDomain: true, //强制使用5+跨域
         contentType: 'application/json',
@@ -27,14 +28,14 @@ export function setHttp(url,type,obj = null,BACK,ERROR){
             }
         },
         error:function (xhr,text) {
-            console.log('text:',text,'xhr:',xhr);
+            // console.log('text:',text,'xhr:',xhr);
             if(xhr.status == 200){
                 if(BACK!=null){
                     BACK(text);
                 }
             }else {
                 if(ERROR!=null){
-                    ERROR(text);
+                    ERROR(xhr);
                 }
             }
         }
@@ -43,12 +44,11 @@ export function setHttp(url,type,obj = null,BACK,ERROR){
  
  
 function GetRequestKey(key){
-    var url = location.search;
+    var url = location.href;
     var theRequest = new Object();
     if (url.indexOf("?") != -1)
     {
-        var str = url.split("?")[1];
-        // var str = url.substr(1);
+        var str = url.split("?")[1]; 
         var strs = str.split("&");
         for (var i = 0; i < strs.length; i++)
         {

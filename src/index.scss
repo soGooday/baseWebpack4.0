@@ -1,11 +1,657 @@
 @import 'src/assets/scss/rem.scss';
+ 
 
-div{
-    color: aqua
+
+@mixin gameSceneImag1($left,$height) {
+    background: url('./assets/images/css_sprites_1.png') ax($left) ax($height); 
+    background-size: ax(563) ax(508); 
 }
-#imageBox{
-    @include aWHU(750,1334); 
-    @include setBg('/assets/images/bg.png');
-    transform: scale(1);
-    display: flex;
+@mixin gameSceneImag2($left,$height) {
+    background: url('./assets/images/css_sprites_3.png') ax($left) ax($height); 
+    background-size: ax(800) ax(522); 
 }
+@mixin gameSceneImag3($left,$height) {
+    background: url('./assets/images/css_sprites_4.png') ax($left) ax($height); 
+    background-size: ax(89) ax(81); 
+}
+#game{
+    position: relative;  
+}
+#moban{
+    // position: absolute; 
+    // @include aWHU(750,1928); 
+    // // @include setBg('./assets/images/bg_2.jpg');
+    // top: -63px; 
+}
+#game-scene{
+    display: none;
+    // position: relative;
+    position: absolute;     
+    @include aWHU(750,1206); 
+    @include setBg('./assets/images/bg.jpg'); 
+    #top-box{
+        overflow: hidden;
+        #pass-title { 
+            position: absolute; 
+            @include aWHU(120,40);  
+            @include gameSceneImag1(-374,-252); 
+            top: ax(18);
+            left: ax(57);
+        }
+        #start-list{ 
+            position: absolute; 
+            @include aWHU(190,44);
+            top: ax(65);
+            left: ax(22); 
+            display: flex; 
+            justify-content : space-between;
+            #list-1{
+                display: flex;
+                @include aWHU(44,42); 
+            }
+            #list-2{
+                display: flex;
+                @include aWHU(44,42); 
+            }
+            #list-3{
+                display: flex;
+                @include aWHU(44,42); 
+            }
+            #list-4{
+                display: flex;
+                @include aWHU(44,42); 
+            }
+        }
+        // .statr-HW{
+            
+        // }
+        #game-timer{
+            position: absolute;
+            top: ax(41);
+            left: ax(315);
+            font-weight:bold;; 
+            font-size: ax(40);
+            font-weight:750;
+            color: white;
+        }
+        #reward-title{
+            position: absolute;
+            top: ax(18);
+            right: ax(30);
+            @include aWHU(208,52);
+            @include gameSceneImag1(-2,-376); 
+        }
+        #reward-content-bg{
+            position: absolute;
+            top: ax(70);
+            right: ax(40);
+            @include aWHU(178,55);
+            @include gameSceneImag2(-293,-353);
+            // display: table-cell ;
+            #reward-content{ 
+                // position: absolute;
+                margin-top: ax(2); 
+                font-size: ax(25);
+                // line-height: ax(55);
+                // margin-left: ax(3);
+            } 
+        }
+      
+    }
+    // #turntable{
+    //     position: absolute; 
+    //     @include aWHU(286,286);
+    //     // @include setBg('./assets/images/lemon.png');
+    //     top: ax(255);
+    //     left: ax(220);  
+  
+    // }
+    #turntable-box{
+        position: absolute; 
+        @include aWHU(286,286);
+        // @include setBg('./assets/images/lemon.png');
+        top: ax(255);
+        left: ax(220); 
+        // // z-index: 1;
+        // #turntable-box-targ-1{
+        //     position: absolute; 
+        //     @include aWHU(20,20);
+        //     left: 0;
+        //     background-color: chartreuse;
+        // }
+        // #turntable-box-targ-2{
+        //     position: absolute; 
+        //     right: 0;
+        //     @include aWHU(20,20);
+        //     background-color: rgb(255, 0, 0);
+        // }
+        // #turntable-box-targ-3{
+        //     position: absolute; 
+        //     bottom: 0;
+        //     left: 0;
+        //     @include aWHU(20,20);
+        //     background-color: rgb(0, 47, 255);
+        // }
+        // #turntable-box-targ-4{
+        //     position: absolute; 
+        //     bottom: 0;
+        //     right: 0;
+        //     @include aWHU(20,20);
+        //     background-color: rgb(0, 0, 0);
+        // }
+    }
+    #turntable-box-T{
+        position: absolute; 
+        @include aWHU(286,286);
+        @include setBg('./assets/images/lemon.png');
+        top: ax(255);
+        left: ax(220);  
+        // z-index: 1;
+    }
+    #knife-send-btn{
+        position: absolute; 
+        @include aWHU(750,600);
+        bottom: 0;
+        border: 1px solid black;
+    }
+    #item-list{
+        position: absolute; 
+        @include aWHU(150,500);
+        border: 1px solid red;
+        top: ax(507);
+        #speed-reduction{
+            position: absolute; 
+            @include aWHU(120,120);
+            border: 1px solid red;
+            top: ax(182);
+            left: ax(3);   
+            #speed-reduction-title{
+                position: absolute; 
+                @include aWHU(95,38);
+                @include gameSceneImag1(-250,-432); 
+                bottom: 0px;
+                left: ax(12); 
+            }
+        }
+        #knife-box{
+            position: absolute; 
+            @include aWHU(120,130);
+            border: 1px solid red;
+            top: ax(332);
+            left: ax(3);  
+            @include gameSceneImag1(-2,-252);  
+            #knife-title{
+                position: absolute; 
+                @include aWHU(95,38);
+                @include gameSceneImag1(-349, -432); 
+                bottom: ax(0);
+                left: ax(12); 
+                align-items : center;
+                display: flex; 
+                justify-content : center;
+                #knife-x{ 
+                    // margin-top: ax(5); 
+                    @include aWHU(24,24);
+                    @include gameSceneImag1( -399, -479);  
+                }
+                #knife-num-bit{ 
+                    // margin-left: ax(-2); 
+                }
+                #knife-num-decade{   
+                    // display: none;
+                }
+            }
+        }
+   
+    } 
+    #waring-box{
+        position: absolute; 
+        @include aWHU(397,121); 
+        top: ax(800);
+        left: ax(180); 
+    }
+    #pass-over-ani{
+        display: none;
+        position: absolute; 
+        @include aWHU(750,1206); 
+        // background-color: rgba(0, 0, 0, 0.568);
+        z-index: 1;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        #left-turntable{
+            position: absolute; 
+            top: ax(260);
+            left: ax(80);
+            @include aWHU(286,286);  
+            @include setBg('./assets/images/lemon_right.png'); 
+        }
+        #right-turntable{
+            position: absolute; 
+            top: ax(260);
+            left: ax(360);
+            @include aWHU(286,286);  
+            @include setBg('./assets/images/lemon_left.png'); 
+        }
+    }
+    //闯关成功的提示弹窗
+    #successfulEntry{
+        display: none;
+        position: absolute; 
+        @include aWHU(750,1206); 
+        background-color: rgba(0, 0, 0, 0.568);
+        z-index: 1;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        #popup-right-bg{
+            position: absolute; 
+            left: ax(160);
+            top: ax(130);
+        }
+        #popup{
+            position: absolute; 
+            left: ax(100);
+            top: ax(200);
+            // margin: auto;
+            // margin-top: ax(250);
+            @include aWHU(550,556); 
+            @include setBg('./assets/images/passOk.png'); 
+            overflow: hidden;
+            #popup-num{
+                margin-left: ax(333);
+                margin-top: ax(400); 
+                @include aWHU(40,36);  
+            }
+        }
+       #pupop-start-bg{
+        position: absolute; 
+        left: ax(210);
+        top: ax(180);
+        
+       }
+    }
+    #fail-game-pupop{
+        display: none;
+        position: absolute; 
+        @include aWHU(750,1206); 
+        background-color: rgba(0, 0, 0, 0.568);
+        z-index: 1;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        #popup-right-bg{
+            position: absolute; 
+            left: ax(160);
+            top: ax(130);
+        }
+        #popup{
+            position: absolute; 
+            left: ax(100);
+            top: ax(200); 
+            @include aWHU(550,556); 
+            @include setBg('./assets/images/failPupop.png'); 
+        }
+        #fail-pupop-btn-1{
+            position: absolute; 
+            left: ax(200);
+            top: ax(475); 
+            @include aWHU(347,116); 
+            @include setBg('./assets/images/failBtn.png'); 
+        }
+        #fail-pupop-btn-2{
+            position: absolute; 
+            left: ax(200);
+            top: ax(580); 
+            @include aWHU(347,90);  
+            // background-color: wheat;
+        }
+        #pupop-start-bg{
+            position: absolute; 
+            left: ax(210);
+            top: ax(180);
+            
+        } 
+    }
+    #test-game-pupop{
+        display: none;
+        position: absolute; 
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        @include aWHU(750,1206); 
+        background-color: rgba(0, 0, 0, 0.568);
+        z-index: 1;
+        #popup-right-bg{
+            position: absolute; 
+            left: ax(160);
+            top: ax(130);
+        }
+        #popup{
+            position: absolute; 
+            left: ax(100);
+            top: ax(195); 
+            @include aWHU(550,556); 
+            @include setBg('./assets/images/testPuop.png'); 
+        }
+        #test-pupop-btn-1{
+            position: absolute; 
+            left: ax(200);
+            top: ax(560); 
+            @include aWHU(347,116); 
+            @include setBg('./assets/images/testPuopBtn.png'); 
+        }
+        #pupop-start-bg{
+            position: absolute; 
+            left: ax(210);
+            top: ax(180);
+            
+           }
+    }
+    #success-game-pupop{ 
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: none;
+        position: absolute; 
+        @include aWHU(750,1206); 
+        background-color: rgba(0, 0, 0, 0.568);
+        z-index: 1;
+        #popup-right-bg{
+            position: absolute; 
+            left: ax(170);
+            top: ax(90);
+        }
+        #popup{
+            position: absolute; 
+            left: ax(100);
+            top: ax(140); 
+            @include aWHU(570,886); 
+            @include setBg('./assets/images/success-pupop.png'); 
+        }
+        #play-name{
+            position: absolute; 
+            top: ax(547); 
+            right: ax(170);
+            height: ax(80);
+            width: ax(300);
+            background:none;  
+            outline:none;  
+            border:none;
+            // background-color: wheat;
+        }
+        #phone-num{
+            position: absolute; 
+            top: ax(662); 
+            right: ax(170);
+            height: ax(80);
+            width: ax(300);
+            background:none;  
+            outline:none;  
+            border:none;
+            // background-color: wheat;
+        }
+        #success-pupop-btn{
+            position: absolute; 
+            left: ax(250);
+            top: ax(840); 
+            @include aWHU(271,116); 
+            @include setBg('./assets/images/successPupopBtn.png'); 
+        }
+        #pupop-start-bg{
+            position: absolute; 
+            left: ax(210);
+            top: ax(120); 
+        } 
+    }
+}
+#main-scene{
+    // display: none;
+    // position: relative;
+    position: absolute;     
+    @include aWHU(750,1800); 
+    @include setBg('./assets/images/mainbg.jpg'); 
+    #strength-num{
+        position: absolute;  
+        color: #ff6521;
+        font-size: ax(47);
+        font-weight: 500;
+        top: ax(455);
+        left: ax(270); 
+    }
+    #add-strength-btn{
+        position: absolute;  
+        @include aWHU(240,90); 
+        top: ax(435);
+        left: ax(415); 
+        
+    }
+    #rewardList-index28{  
+        position: absolute;  
+        flex-direction:column;
+        top: ax(550);
+        left: ax(100); 
+        line-height: ax(53);  
+        font-size: ax(25); 
+        overflow: hidden;  
+        @include aWHU(510, 53);
+        #rewardList-index28-0{
+            position: absolute;
+            top: ax(0);
+            div{ 
+                // margin: 0 0 0 ax(50); 
+                @include aWHU(540, 53);
+                #index-context-1{
+                    color: #be824c;
+                }
+                #index-context-2{
+                    color: #be824c;
+                }
+            }
+        }
+   
+    }
+    //奖品按钮1 免费 仅限一次
+    #reward-1-play-btn{
+        position: absolute;  
+        @include aWHU(240,90); 
+        top: ax(870);
+        left: ax(100); 
+    }
+    #reward-2-play-btn{
+        position: absolute;  
+        @include aWHU(240,90); 
+        top: ax(870);
+        right: ax(100); 
+    }
+    #reward-3-play-btn{
+        position: absolute;  
+        @include aWHU(240,90); 
+        top: ax(1210);
+        left: ax(100); 
+    }
+    #reward-4-play-btn{
+        position: absolute;  
+        @include aWHU(240,90); 
+        top: ax(1210);
+        right: ax(100); 
+    }
+    #reward-5-play-btn{
+        position: absolute;  
+        @include aWHU(240,90); 
+        top: ax(1550);
+        left: ax(100); 
+    }
+    #reward-6-play-btn{
+        position: absolute;  
+        @include aWHU(240,90); 
+        top: ax(1550);
+        right: ax(100); 
+    }
+}
+//图片更换专用区域
+//实心星星
+.passdStart_y{
+    @include gameSceneImag1(-426,-376); 
+
+}
+//空心星星
+.passdStart_n{
+    @include gameSceneImag1(-517,-2); 
+}
+//游戏中道具
+// 减速道具
+.speed-reduction-y{
+    @include gameSceneImag1(-126,-252); 
+}
+.speed-reduction-n{
+    @include gameSceneImag1(-250,-252); 
+}
+//剩余刀子的数量
+.num_0{
+    @include aWHU(21,26);  
+    @include gameSceneImag1(-480,-478); 
+}
+.num_1{
+    @include aWHU(15,25);  
+    // @include aWHU(21,24);  
+    @include gameSceneImag1(-404,-343); 
+}
+.num_2{
+    @include aWHU(21,26);  
+    @include gameSceneImag1(-468,-342); 
+}
+.num_3{
+    @include aWHU(20,26);  
+    @include gameSceneImag1(-478,-434); 
+}
+.num_4{
+    @include aWHU(21,26);  
+    @include gameSceneImag1(-32,-478); 
+}
+.num_5{
+    @include aWHU(20,25);  
+    @include gameSceneImag1(-96,-479); 
+}
+.num_6{
+    @include aWHU(21,26);  
+    @include gameSceneImag1(-160,-478); 
+}
+.num_7{
+    @include aWHU(20,25);  
+    @include gameSceneImag1(-224,-479); 
+}
+.num_8{
+    @include aWHU(21,26);  
+    @include gameSceneImag1(-288,-478); 
+}
+.num_9{
+    @include aWHU(21,26);  
+    @include gameSceneImag1(-352,-478); 
+} 
+//弹窗的相关类
+//弹窗的中管辖的显示
+.pupop_num_2{
+    @include gameSceneImag3(-47,-2);
+}
+.pupop_num_3{
+    @include gameSceneImag3(-3,-3);
+}
+.pupop_num_4{
+    @include gameSceneImag3(-2,-43);
+}
+//弹窗的背景显示
+.pupop_right_1{
+    @include aWHU(430,378);  
+    @include setBg('./assets/images/right_1.png'); 
+    animation: pupop-rotate 2s linear infinite;
+}
+.pupop_right_2{
+    @include aWHU(377,378);  
+    @include setBg('./assets/images/right_2.png'); 
+}
+.pupop_start{
+    @include aWHU(317,99);  
+    @include setBg('./assets/images/start.png'); 
+}
+//图片的字样提示
+//告诉玩家如何玩
+.waring-img-1{ 
+    @include gameSceneImag1(-2,-127); 
+}
+.waring-img-2{ 
+    @include gameSceneImag1(-2,-2); 
+}
+// 主页面中的更多的按钮字样
+.more-btn-T-1{
+    @include gameSceneImag2(-10,-230); 
+}
+.more-btn-T-2{
+    @include gameSceneImag2(-270,-120); 
+}
+.more-btn-B{
+    @include gameSceneImag2(-270,-10); 
+}
+//免费玩耍
+.free_btn_T {
+    @include gameSceneImag2(-270,-230);   
+}
+.free_btn_B {
+    @include gameSceneImag2(-10,-340);   
+}
+//花费体力开始
+.play_btn_T{
+    @include gameSceneImag2(-10,-10);   
+}
+.play_btn_B{
+    @include gameSceneImag2(-10,-120);   
+}
+//没有体力了 看视频开始游戏
+.continue_btn_T{
+    @include gameSceneImag2(-540,-2);    
+}
+.continue_btn_B{
+    @include gameSceneImag2(-540,-96);    
+}
+//按钮置灰
+.gray{ 
+    filter: grayscale(100%);
+    filter: gray;
+    opacity:1;//通过改变透明度来调节灰色的程度
+}
+//被发射的刀子
+.gs-launch{
+    position: absolute; 
+    @include aWHU(52,193);
+    @include gameSceneImag1(-433,-20); 
+    top: ax(940);
+    left: ax(350);  
+}
+// .animation{animation: turntable-jump 1s ease 0.5s forwards running}
+.turntable-ani{animation: turntable-jump 2s ease-in-out 0.1s forwards running}
+// 动画专区  
+//大转盘被插入刀子的时候 上下进行跳动
+@keyframes turntable-jump{
+    0%{transform: translateY(0%);}
+    25%{transform: translateY(5%);}
+    50%{transform: translateY(0%);}
+    75%{transform: translateY(-5%);}
+    100%{transform: translateY(0%);}
+}
+@keyframes pupop-rotate{
+    0%{transform:rotate(0deg)}
+    50%{transform:rotate(180deg)}
+    100%{transform:rotate(360deg)}
+}
+//大转盘的掉落
+@keyframes lemon-down{
+    // 0%{transform: ;}
+}
+
+
+  

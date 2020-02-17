@@ -4,7 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>我是前来测试的</title>
+    <title>水果机</title>
+    <script src="https://cdn.bootcss.com/vConsole/3.2.2/vconsole.min.js"></script>
+    <script>
+        var vConsole = new VConsole();
+        console.log('hello world')
+    </script>
+ 
     <script>
         var docEl = document.documentElement,
         resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
@@ -16,6 +22,7 @@
                 docEl.style.fontSize = 20 * (clientWidth / 375) + 'px';
                 window.remscale = clientWidth / 375;
                 var realfz = ~~(+window.getComputedStyle(document.getElementsByTagName("html")[0]).fontSize.replace('px','')*10000)/10000
+                window.realfz = fz * (fz / realfz);
                 if (fz !== realfz) {
                     document.getElementsByTagName("html")[0].style.cssText = 'font-size: ' + fz * (fz / realfz) +"px";
                 }
@@ -28,7 +35,111 @@
     </script>
 </head>
 <body> 
-    <div id='imageBox'></div>
-    
+    <div id="game"> 
+        <!-- <div id="moban"></div> -->
+        <div id='game-scene'>
+            <div id="top-box">
+                <div id="pass-title"></div>
+                <div id="start-list">
+                    <div id="list-1" class="passdStart_n"></div>
+                    <div id="list-2" class="passdStart_n"></div>
+                    <div id="list-3" class="passdStart_n"></div>
+                    <div id="list-4" class="passdStart_n"></div> 
+                </div>
+                <div id="game-timer">33:45</div>
+                <div id="reward-title"></div>
+                <div id="reward-content-bg">
+                    <p id="reward-content">华为5G手机</p>
+                </div>
+            </div>
+            <!-- <div is="turntable" class="turntable-ani"> -->
+                <div id="turntable-box">
+                    <!-- <div id="turntable-box-targ-1">左上</div>
+                    <div id="turntable-box-targ-2">右上</div>
+                    <div id="turntable-box-targ-3">左下</div>
+                    <div id="turntable-box-targ-4">右下</div> -->
+                </div>
+                <div id="turntable-box-T" > 
+            <!-- </div> -->
+          
+            </div>
+            <div id="waring-box" class="waring-img-1"></div>
+            <div id="knife-send-btn"></div>
+            <div id="item-list">
+                <div id="speed-reduction" class="speed-reduction-y"> 
+                    <div id="speed-reduction-title"></div>
+                </div>
+                <div id="knife-box">
+                    <div id="knife-title">
+                        <div id="knife-x"></div>
+                        <div id="knife-num-decade" class="num_1"></div>
+                        <div id="knife-num-bit" class="num_0"></div> 
+                    </div>
+                </div>
+            </div>
+            <div id="pass-over-ani">
+                <div id="left-turntable"></div>
+                <div id="right-turntable"></div>
+            </div>
+            <div id="successfulEntry">
+                <div id="popup-right-bg" class="pupop_right_1"></div>
+                <div id="popup">
+                    <div id="popup-num" class="pupop_num_2"></div>
+                </div>
+                <div id="pupop-start-bg" class="pupop_start"></div>
+            </div>
+            <div id="fail-game-pupop">
+                <div id="popup-right-bg" class="pupop_right_1"></div>
+                <div id="popup"></div>
+                <div id="fail-pupop-btn-1"></div>
+                <div id="fail-pupop-btn-2"></div>
+                <div id="pupop-start-bg" class="pupop_start"></div>
+            </div>
+            <div id="test-game-pupop">
+                <div id="popup-right-bg" class="pupop_right_1"></div>
+                <div id="popup"></div>
+                <div id="test-pupop-btn-1"></div>
+                <div id="pupop-start-bg" class="pupop_start"></div>
+            </div>
+            <div id="success-game-pupop">
+                <div id="popup-right-bg" class="pupop_right_1"></div>
+                <div id="popup"></div>
+                <input id="play-name" type="text" >
+                <input id="phone-num" type="text"  oninput = "value=value.replace(/[^\d]/g,'')">
+                <div id="success-pupop-btn"></div>
+                <div id="pupop-start-bg" class="pupop_start"></div>
+            </div>
+        </div>
+        <div id="main-scene">
+            <div id="strength-num">2</div>
+            <div id="add-strength-btn" class="more-btn-T-2"></div> 
+            <div id="rewardList-index28">
+                <div id="rewardList-index28-0">
+                        <div id="rewardList-index28-1">
+                                <span id="index-context-1">1恭喜123****121获得</span>
+                                <span id="index-context-2">红包50元</span>
+                            </div>
+                            <div id="rewardList-index28-2">
+                                <span id="index-context-1">2恭喜123****121获得</span>
+                                <span id="index-context-2">红包50元</span>
+                            </div>
+                            <div id="rewardList-index28-3">
+                                <span id="index-context-1">3恭喜123****121获得</span>
+                                <span id="index-context-2">红包50元</span>
+                            </div>
+                            <div id="rewardList-index28-4">
+                                <span id="index-context-1">4恭喜123****121获得</span>
+                                <span id="index-context-2">红包50元</span>
+                            </div>
+            </div> 
+        </div>  
+        <div id="reward-1-play-btn" class="free_btn_T"></div>
+        <div id="reward-2-play-btn" class="play_btn_T"></div>
+        <div id="reward-3-play-btn" class="play_btn_T"></div>
+        <div id="reward-4-play-btn" class="play_btn_T"></div>
+        <div id="reward-5-play-btn" class="play_btn_T"></div>
+        <div id="reward-6-play-btn" class="play_btn_T"></div>
+     
+    </div> 
 </body>
 </html>
