@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build:t": "webpack --mode=development   --progress --color --debug",
-    "build:p": "webpack --mode=production --progress --color",
-    "dev": "webpack-dev-server --inline --open"
+    "build:b": "cross-env NODE_ENV=development webpack    --progress  --color  --debug",
+    "build:p": "cross-env NODE_ENV=production webpack    --progress  --color",
+    "dev": "cross-env NODE_ENV=development webpack-dev-server --inline --open"
   },
   "keywords": [],
   "author": "",
@@ -21,6 +21,7 @@
     "babel-preset-stage-2": "^6.24.1",
     "clean-webpack-plugin": "^3.0.0",
     "copy-webpack-plugin": "^5.0.4",
+    "cross-env": "^7.0.0",
     "css-loader": "^3.2.0",
     "file-loader": "^4.2.0",
     "html-webpack-plugin": "^3.2.0",
@@ -41,7 +42,6 @@
   "dependencies": {
     "lib-flexible": "^0.3.2"
   },
-  
   "browserslist": [
     "last 2 version",
     "> 1%",

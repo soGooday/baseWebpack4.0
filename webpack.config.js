@@ -7,14 +7,17 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 // const vConsolePlugin = require('vconsole-webpack-plugin');
 const envTypeDist = process.env.NODE_ENV === 'development' ? 'dist.test/dist' : 'dist.prod/dist';//打包地址的设置
 const envType = process.env.NODE_ENV === 'development' ? 'development' : 'production';//设置当前的环境
-console.log('我们当前的环境是：',envType);
+
+console.log('--我们当前的环境是1：',envType);
+// console.log('---我们当前的环境是2：', process.env);
+console.log("--打包的路径",envTypeDist);
 module.exports={
     entry:'./src/index.js',
     output:{
-        filename:'index.js',
+        filename:'index[hash:8].js',
         path:path.resolve(__dirname,envTypeDist)
     },
-    // mode:envType,
+    mode:envType,
     // mode:'development',
     plugins:[
         new HtmlWebpackPlugin({
@@ -67,8 +70,7 @@ module.exports={
             {
                 test: /\.scss$/,
                 use: [
-                  MiniCssExtractPlugin.loader, 
-              
+                  MiniCssExtractPlugin.loader,  
                   'css-loader', 
                   // {
                   //   loader: 'px2rem-loader',
@@ -94,7 +96,7 @@ module.exports={
                 test: /\.(png|jpg|gif)$/,
                 use: [
                   {
-                    loader: 'url-loader?limit=10&name=assets/images/[name].[ext]',  
+                    loader: 'url-loader?limit=10&name=assets/images/[name][hash:8].[ext]',  
                   }
                 ]
               }

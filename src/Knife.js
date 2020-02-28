@@ -28,7 +28,7 @@
     }
     move(BACK=null){ 
         if(this.isCanMove === false) return;
-        this.topNum -= 0.5; 
+        this.topNum -= 2.5; 
         // this.objctknife.style.top = `${this.topNum}px`
         this.objctknife.style.top = `${this.topNum}rem`
         // console.log('this.objctknife.style.top:',this.objctknife.style.top);
@@ -83,5 +83,6 @@
             height:95
         } 
     }
+ 
 }        
  

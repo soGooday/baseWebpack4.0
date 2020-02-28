@@ -15,7 +15,7 @@ export class TurntableAni{
         //初始化的坐标
         this.positionX = positionX;
         this.positionY = positionY; 
-        //生成多少帧的动画坐标
+        //生成多少帧的动画坐标0
         this.speedNum = 1000/10;
         //第几帧动画的只
         this.indexNum =0;   

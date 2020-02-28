@@ -2,7 +2,7 @@
 export default class countinfoPoint {
     /**
      * 传入是测试服 还是正式服的发送的埋点的链接
-     * @param _urlPoint
+     * @param _urlPoint 传入当前是不是正式服
      */
     constructor(_urlPoint) {
         this.urlPoint = _urlPoint == true ? 'https://adscount.fawulu.com/award/countInf0' : 'http://47.98.242.33:15018/award/countInf0';//链接地址;

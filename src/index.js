@@ -3,12 +3,14 @@ import $ from '../node_modules/zepto-webpack/zepto.js'
 import './assets/tool/Zepto.fx.js' 
 import {Knife} from'./Knife.js' 
 import {TurntableAni} from './TurntableAni.js';
+import countinfoPoint from './config/point.js' //埋点的处理
 const gameInfo ={
     phoneHand:[134,135,136,137,138,139,147,150,151,152,157,158,159,182,187,188,130,131,132,155,156,185,186],//随机出现的手机号头 
-    redMoney:[10,20,120,220,20],//红包的金额文案数值
+    redMoney:['5元红包','100元红包','华为5G手机','ipadAir3','airPods'],//红包的金额文案数值
     giveStrengthNum:2,//每天开局赠送的体力数量
     whatchVideoTopNum:8,//上线的次数
     playCostStrengthNum:2,//每次花费的体力数两
+    addStrengthNum:2,//当前看视频增加的体力数量
     key:'uid',//玩家当前的本地储存的key值
     btin_1:null,//看视频获得更多体力 最上面的那个
     btin_2:null,//免费玩游戏的按钮
@@ -19,14 +21,23 @@ const gameInfo ={
     btin_7:null,  
     passNum:0,//当前是第几关了 
     waring_1:'您已超过最近大关卡数',
-    delayNum:10,//单位是毫秒
-    
+    waring_2:'转盘已减速15%',
+    waring_3:'已获得2个体力',
+    delayNum:50,//单位是毫秒
+    prefabKinfeDelayNum:300,//单位是毫秒 预制刀子中的碰撞检测延时时间
+    successPupopDelayNum:1000,//闯关成功 最后获奖了 显示弹窗的延迟倒计时 （要留给通关钱转盘的动画时间）
+    failPupopDelayNum:200,//通关失败中的延迟出现通关的弹窗时间
+    passPupopDelayNum:1000,//正常通关中的延迟出现通关的弹窗时间（要留给通关钱转盘的动画时间）
+    // standBtnTopNum:2,//挽留弹窗一天出现次数的上线
+  
 }
 //减速道具的相关信息 
 let slowDownPropInfo={
     useStatus: 1,//当前道具是否可用 0正在使用中 1是可用 2不可以使用
     normalSpeed:1,//正常的速度是1
+    speedScope:[0.8,1.8],//这个是速度的范围
     speedDowm:0.85,//减去的速率
+    timeNumList:[[8000,10000],[3000,5000],[1500,3000],[500,1000]],//每一关的更改转盘的相关时间参数
      
 }
 //游戏中的奖品信息
@@ -38,56 +49,56 @@ let rewardList={
             id:1,
             content:'获取更多体力',//这个是不需要的 因为这个是获取更多体力的 
             maxPassNum:0,//关数的上线 
-            passKnifeNumList:[4,5,6,7],//每一关卡的刀子数量
-            timeList:[40,35,25,20],//倒计时的值
+            passKnifeNumList:[4,6,7,8],//每一关卡的刀子数量
+            timeNumList:[20,15,15,15],//倒计时的值
             typeOfPlay :1,// 1=试玩 2奖品通关  
         },
         reward2:{
             id:2,
             content:'免费试玩',
             maxPassNum:2,//关卡的上线
-            passKnifeNumList:[4,6,6,6], //每一关卡的刀子数量
-            timeNumList:[40,35,25,20],//倒计时的值
+            passKnifeNumList:[4,6,7,8],//每一关卡的刀子数量
+            timeNumList:[20,15,15,15],//倒计时的值
             typeOfPlay :1,// 1=试玩 2奖品通关
         },
         reward3:{
             id:3,
             content:'华为5G手机', 
             maxPassNum:4,//关卡的上线 
-            passKnifeNumList:[5,7,9,10], //每一关卡的刀子数量
-            timeNumList:[40,35,25,20],//倒计时的值
+            passKnifeNumList:[6,9,11,16], //每一关卡的刀子数量
+            timeNumList:[20,15,15,15],//倒计时的值
             typeOfPlay :2,// 1=试玩 2奖品通关
         },
         reward4:{
             id:4,
             content:'100元红包', 
             maxPassNum:4,//关卡的上线
-            passKnifeNumList:[5,7,9,10], //每一关卡的刀子数量 
-            timeNumList:[40,35,25,20],//倒计时的值
+            passKnifeNumList:[6,9,11,16], //每一关卡的刀子数量 
+            timeNumList:[20,15,15,15],//倒计时的值
             typeOfPlay :2,// 1=试玩 2奖品通关
         },
         reward5:{
             id:5,
             content:'5元红包',
-            maxPassNum:3,//关卡的上线 
-            passKnifeNumList:[5,7,9,10], //每一关卡的刀子数量
-            timeNumList:[40,35,25,20],//倒计时的值
+            maxPassNum:4,//关卡的上线 
+            passKnifeNumList:[6,9,11,16], //每一关卡的刀子数量
+            timeNumList:[20,15,15,15],//倒计时的值
             typeOfPlay :2,// 1=试玩 2奖品通关
         },
         reward6:{
             id:6,
             content:'ipadAir3',
             maxPassNum:4,//关卡的上线 
-            passKnifeNumList:[5,7,9,10], //每一关卡的刀子数量
-            timeNumList:[40,35,25,20],//倒计时的值
+            passKnifeNumList:[6,9,11,16], //每一关卡的刀子数量
+            timeNumList:[20,15,15,15],//倒计时的值
             typeOfPlay :2,// 1=试玩 2奖品通关
         },
         reward7:{
             id:7,
             content:'AirPods',
             maxPassNum:4,//关卡的上线
-            passKnifeNumList:[5,7,9,10], //每一关卡的刀子数量
-            timeNumList:[40,35,25,20],//倒计时的值
+            passKnifeNumList:[6,9,11,16], //每一关卡的刀子数量
+            timeNumList:[20,15,15,15],//倒计时的值
             typeOfPlay :2,// 1=试玩 2奖品通关
         }
 }
@@ -102,9 +113,21 @@ let gameSceneUI={
 //本地需要储存的数据
 let localStorage = {
     lastTime:0,//每次登入时间就会更新
-    strengthNum:10,//当前有的最多的次数 
+    strengthNum:10,//当前有多少体力 
     canfreePlay:1,//0=false  1=true
     whatchVideoNum:0,//当前观看过几次视频了 
+    standBtnTopNum:2,//后面是挽留的次数 一天可以挽留几次 没挽留一次，就将次数减去一次 0的时候说明没有挽留次数
+    passNum:1,//当前再第几关卡
+}
+//视频回调的类型
+let watchVideosType={
+    changeType:1,
+    getStrengthNum:1,//获取体力 
+    playerGame:2,//没有体力在主页点击直接玩游戏
+    continueGame:3,//继续玩游戏复活
+    shiftDown:4,///减速道具
+    standPlayer:5,//挽留用户看视频给体力
+    watchVideoCallBack:null,//当前的视频回调显示
 }
 
 
@@ -118,6 +141,12 @@ class fruitMachine{
      *初始化使用
      */
     init(){ 
+
+        gameInfo.key = this.getURLParameter().userId ||  gameInfo.key ;
+        console.log('当前储存的keygameInfo.key:', gameInfo.key);
+        window._globalPointReport = function() {}//重写这个趣淘金的方法
+        console.log('当前版本是0.0.9')
+        this.initVideosSDKBack();
         //首先取到本地记录 初始化相关的数据
         this.getlocalData();
         //----变量创建区----
@@ -137,12 +166,15 @@ class fruitMachine{
         this.timerIsStop = false; 
         //游戏帧的积累 用于阻碍转盘的减速
         this.gameFrame = 0;
+        //能发送埋点4001的埋点 用户参与 是第一关且第一次发射刀子
+        this.canSen4001=false;//第一关 且这个状态为true 才能发射刀子  所以放在了Game场景里面，这个方法只有从Main进入Game场景的时候才会被调用
+
         
         //取到页面上的相关按钮
         this.getBtnNode();
         //绑定出视图与数据区
         this.setPropertyInit(); 
-
+        // this.processBool = false;//当前是不是正式服 埋点发送地址
         //初始化数据
         this.strengthNum  = localStorage.strengthNum; 
        
@@ -160,18 +192,45 @@ class fruitMachine{
 
         //生成中间转盘掉落的动画页面
         this.turntableFallDown();
-        
-      
-      
+  
+ 
+        //检测今天有没出现过挽留
+        if(!localStorage.standBtnTopNum){
+                //拦截返回按钮的事件
+                let setBackBtn={ 
+                    pushHistory() { 
+                    　　var state = { 
+                    　　　　title: "title", 
+                    　　　　url: "#"
+                    　　}; 
+                    　　window.history.pushState(state, "title", "#"); 
+                    }
+                } 
+                setBackBtn.pushHistory();
+                window.addEventListener("popstate", ()=> { 
+                    this.showStandPupop(true);
+                }, false); 
+        }
+
+        //埋点的曝光发送
+        this.sendPonit(3);//
+
+        //使用防抖函数 方式视频播放短时间没多次点击
+        this.watchVideosBtnEvent = this.throttle(()=>{
+            console.log('前往拉取视频');
+            window.location.href="qtj://profession/playH5Video?url="
+        },8000) 
     }  
+    
      /**
      * 按钮绑定专用
-     */
+     */  
     bin(){  
 
         //添加体力的按钮
         this.setBtn('#add-strength-btn',()=>{
             this.mainSceneBtnEvent(rewardList.reward1);
+            // window.location.href = 'https://dev-test-space.oss-cn-hangzhou.aliyuncs.com/dist01/IATest/private/yini/dist/index.html';
         })
         //免费玩耍的按钮
         this.setBtn('#reward-1-play-btn',()=>{
@@ -201,16 +260,16 @@ class fruitMachine{
         $('#knife-send-btn').click(()=>{ 
             this.sendKnife(); 
         })
-         //失败的窗中 看视频立即复活按钮
-        this.setBtn('#fail-pupop-btn-1',()=>{ 
-            this.watchVideosSDK(4,()=>{
+        //失败的窗中 看视频立即复活按钮
+        $('#fail-pupop-btn-1').click(()=>{ 
+            this.watchVideosSDK(watchVideosType.continueGame,()=>{
                 this.initPassInfo(localStorage.passNum);
                 //关闭提示弹窗
                 this.isFailPupop(false);
                 //将减速道具设置为已经
                 console.log('看视频从本官卡直接复活:',this.passNum);
             })
-        })   
+        }) 
         //通关失败返回主页面
         this.setBtn('#fail-pupop-btn-2',()=>{
             this.openMainScene();
@@ -225,8 +284,49 @@ class fruitMachine{
             let name = document.getElementById('play-name').value;
             let phone = document.getElementById('phone-num').value; 
         })   
-        //绑定减速道具
-        // this.speedBtn();
+        //挽留弹窗
+        $('#stand-pupop-btn-1').click(()=>{ 
+            this.watchVideosSDK(watchVideosType.standPlayer,()=>{
+               this.addstrengthNum(gameInfo.addStrengthNum);
+               this.setlocalData();
+               this.showStandPupop(false);
+               this.showTipsBox(gameInfo.waring_3); 
+            })
+        })  
+        //关闭页面 
+        $('#stand-pupop-btn-2').click(()=>{ 
+            this.showStandPupop(false);
+            // window.history.back(-1); 
+            // window.history.go(-1); //返回上一页
+        }) 
+        // let ceshi =  this.throttle(()=>{
+        //     console.log('我被点击了');
+        //     this.showRulePupop(true);
+        // },3000)
+        //规则按钮
+        this.setBtn('#rule-btn',()=>{
+            //渠道玩家填写的内容
+            console.log('我被点击了');
+            this.showRulePupop(true);
+     
+
+        })   
+        this.setBtn('#reward-btn',()=>{
+            //渠道玩家填写的内容 
+            this.rewardListPupop(true);
+     
+
+        })   
+        this.setBtn('#rule-pupop-close-btn',()=>{
+            //渠道玩家填写的内容 
+            this.showRulePupop(false);  
+        })     
+        this.setBtn('#winning-record-close-btn',()=>{
+            //渠道玩家填写的内容 
+            this.rewardListPupop(false);  
+        })  
+       
+ 
     }
     //绑定减速按钮事件
     speedBtn(){
@@ -234,11 +334,12 @@ class fruitMachine{
         this.setBtn('#speed-reduction',()=>{ 
             //调取视频
             this.isStopTimer(true);
-            this.watchVideosSDK(1,()=>{
+            this.watchVideosSDK(watchVideosType.shiftDown,()=>{
+                this.showTipsBox(gameInfo.waring_2);
                 // console.log('使用道具')
+                //倒计时停止
                 this.isStopTimer(false); 
-                // this.useSpeedProp(2);
-                console.log('slowDownPropInfo.useStatus:',slowDownPropInfo.useStatus);
+                this.useSpeedProp(2);
                 slowDownPropInfo.useStatus = 0;
             })
 
@@ -287,10 +388,7 @@ class fruitMachine{
         });   
         //减速道具
         this.setProperty(slowDownPropInfo,'useStatus',1,(vlue)=>{
-            console.log('useStatus:',vlue);
-               //状态进行更换
-            console.log('---------------------:',vlue) 
-           
+            console.log('useStatus:',vlue);  
             this.useSpeedProp(vlue);
         
         });  
@@ -307,10 +405,17 @@ class fruitMachine{
         }
         //有刀子切是可以发射的状态
         if( this.knife && this.canLaunchStatus){ 
+            //关掉玩法提示
+            this.showImgWaring(-1);
             // this.knifeNumArry.push(this.knife);//将刀子放到碰撞检测中
             this.knife.isCanMove = true; //打开刀子的移
             this.canLaunchStatus = false;  //发射后将刀子的准备状态设置为false
         }
+        if(this.canSen4001 && localStorage.passNum===1 ){
+            this.canSen4001=false;
+            this.sendPonit(4);//用户参与埋点
+        }
+    
     }
     /**
     *  打开游戏的场景
@@ -328,10 +433,13 @@ class fruitMachine{
         this.isOpenMainScene(false); 
         //初始化相关数据
         this.initPassInfo(1);
+        //引导玩家点击发射刀子
+        this.showImgWaring(1);
         //将减速道具设置为可以使用
         // this.useSpeedProp(1);
         slowDownPropInfo.useStatus = 1;
-        // this
+        //将发送埋点的状态放开
+        this.canSen4001 = true;//在刀子发射中使用
         //回调方法 
         if(BACK!=null){
             BACK();
@@ -426,12 +534,11 @@ class fruitMachine{
      * 获取更多体力显示的 最对点击8次 超过了就不可以再进行点击了  置灰处理
      */
     Btn1Event(){ 
-        if(localStorage.whatchVideoNum<=gameInfo.whatchVideoTopNum){
-           
-           
-            this.watchVideosSDK(3,()=>{
+        if(localStorage.whatchVideoNum<=gameInfo.whatchVideoTopNum){ 
+            this.watchVideosSDK(watchVideosType.getStrengthNum,()=>{
                 //将减速道具设置为已经
                 localStorage.whatchVideoNum++;
+                this.addstrengthNum(gameInfo.addStrengthNum)
                 console.log('玩家唤起视频，增加体力');
             })
         }else{
@@ -440,7 +547,7 @@ class fruitMachine{
         
     }
     /**
-     * 按钮2的事件处理 
+     * 按钮2 --试玩按钮的处理
      * @param {object} reward 
      */
     btn2Event(reward){
@@ -454,7 +561,7 @@ class fruitMachine{
         localStorage.canfreePlay = 0;
     } 
     /**
-     * 选择固定的游戏进行挑战
+     * 选择固定奖品的游戏进行挑战
      * @param {object} rewardList 
      */
     btnRwardEvent(rewardList){
@@ -462,15 +569,20 @@ class fruitMachine{
         //体力值大于等于2 可以开始游戏
         if(this.strengthNum>=gameInfo.playCostStrengthNum){
             //打开游戏场景 
-            this.openGameScene(rewardList,()=>{
-                //减去点体力值作为门票
-                this.addstrengthNum(-gameInfo.playCostStrengthNum);
+            this.openGameScene(rewardList,()=>{ 
+                //减去点体力值作为门票 
+                this.addstrengthNum(-gameInfo.playCostStrengthNum); 
             });
             console.log('可以直接开始游戏,活动的将奖品id是',rewardList)
         }else{ 
-            this.watchVideosSDK(2,()=>{
+            this.watchVideosSDK(watchVideosType.playerGame,()=>{
                 //将减速道具设置为已经
                  console.log('没有体力使用看视频充体力,看视频开始游戏');
+                 this.openGameScene(rewardList,()=>{ 
+                     console.log('进入玩游戏啦~');
+                    //减去点体力值作为门票 
+                    // this.addstrengthNum(-gameInfo.playCostStrengthNum); 
+                });
             })
             // //体力值小于2 则打开调取看视频玩游戏的逻辑
             // console.log('不可以直接开始游戏,玩家的体力值不够,活动的将奖品id是',rewardList)
@@ -560,14 +672,15 @@ class fruitMachine{
                 this.haveKnifeNum --; 
                 //如果没有刀子了说玩家通关成功了
                 if(this.haveKnifeNum === 0) {
-                    setTimeout(()=>{
-                      
-                        //延迟300毫秒检测碰撞
+                    setTimeout(()=>{ 
+                        //延迟相应毫秒检测碰撞--会出现一种情况 最后一个刀子的碰撞 是先处理通关还是先处理碰撞？  先处理有无碰撞 再处理有没有通关
                         this.canChangeGameStatus(1); 
                        
-                    },300)
+                    },gameInfo.prefabKinfeDelayNum)
                     return
                 }  
+                //插入转盘的跳动
+                // this.jumpAnimation();
                 //生成信息的刀子
                 this.prefabKinfeObj();  
             }); 
@@ -592,8 +705,7 @@ class fruitMachine{
     }
     //刀子数组的碰撞检测
     checkKinfeArry(){
-        if( this.knifeNumArry.length <2) return;
-        // console.log('this.knifeNumArry.length:',this.knifeNumArry.length);
+        if( this.knifeNumArry.length <2) return; 
         this.knifeNumArry.forEach((element)=>{ 
             //检测有无刀子
             if(this.knife === null ||  this.knife === undefined || this.knife === '') return;
@@ -611,11 +723,14 @@ class fruitMachine{
     }
     /**
      * 当前关卡设置的事件
-     * @param {number} num 
+     * @param {number} num 传入当前是第几关卡
      */
     dealWithpass(num){
+        //对转盘进行调整
+        this.changeSpeed()
         //显示左上角的关卡数量
         this.showPassStarts(num); 
+        this.showPassNum(num);
 
         //检查关卡数是不是超过了本奖品的最大关卡数 是的话 出现弹窗提示
         if(num > this.chooseRwardInfo.maxPassNum){
@@ -626,16 +741,16 @@ class fruitMachine{
         //初始化当前的刀子的数量
         this.haveKnifeNum = this.chooseRwardInfo.passKnifeNumList[num-1]; 
         
-        //初始化时间
+        //初始化倒计时时间
         this.showTimerNum(this.chooseRwardInfo.timeNumList[num-1],()=>{ 
             //倒计时结束 游戏闯关失败
-           this.canChangeGameStatus(2);
+           this.canChangeGameStatus(3);
             console.log('倒计时结束');
 
         })
     }
     /**
-     * 检测当前是不是可以进行更改游戏额状态
+     * 检测当前是不是可以进行更改游戏额状态  0 游戏中 1通关 2碰撞失败 3是倒计时到了闯关失败 
      * @param {number} num 
      */
     canChangeGameStatus(num){
@@ -653,6 +768,14 @@ class fruitMachine{
         return 
     }
     /**
+     * 左上角 当前的关卡数是多少  例如 第一关 第二关 第三关 第四关 
+     * @param {number} num 
+     */
+    showPassNum(num){
+       let node = $('#pass-title');
+       node.removeClass().addClass(`pass-title-${num}`);
+    }
+    /**
      * 展示星星关卡数  左上角 当前的关卡数是多少
      * @param {number} num 
      */
@@ -668,7 +791,7 @@ class fruitMachine{
                 node.addClass('passdStart_n')
             },
        }
-
+       num -=1;
        dealWite.changeStatsN(gameSceneUI.starts_1)
        dealWite.changeStatsN(gameSceneUI.starts_2)
        dealWite.changeStatsN(gameSceneUI.starts_3)
@@ -691,7 +814,7 @@ class fruitMachine{
     }
     
     /**
-     * 展示当前的奖品内容
+     * 在游戏的右上角展示当前的奖品内容
      * @param {string} content 
      */
     showReWardTitle(content){
@@ -704,21 +827,33 @@ class fruitMachine{
      * @param {object} chooseRwardInfo 奖品的内容chooseRwardInfo 
      * @param {number} passNum 当前是第几关卡 
      */
-    customsPassStatus(num,chooseRwardInfo,passNum){
+    customsPassStatus(num,chooseRwardInfo,passNum){ 
+        // successPupopDelayNum:1000,//闯关成功 最后获奖了 显示弹窗的延迟倒计时 （要留给通关钱转盘的动画时间）
+        // failPupopDelayNum:200,//通关失败中的延迟出现通关的弹窗时间
+        // passPupopDelayNum:1000,//正常通关中的延迟出现通关的弹窗时间（要留给通关钱转盘的动画时间）
+        let timeNum = 1000;
         if(num!==0){
             this.timerOver() 
         }
         let gameType = 0;
         if( num === 1 ){
-            gameType = this.getShowPupopTyp(passNum,chooseRwardInfo);
-            // console.log('通关成功');
-        }else if( num === 2 ){
+            timeNum = gameInfo.passPupopDelayNum;
+            gameType = this.getShowPupopTyp(passNum,chooseRwardInfo); 
+        }else if( num === 2 ){//玩家是碰撞到了 刀子后失败的
             gameType = 3
+            // 策划说失败的弹窗出现的延迟时间太久了 所以我在这里 进行处理
+            timeNum = gameInfo.failPupopDelayNum;
+        }else if( num === 3 ){ //玩家是倒计时失败的
+            gameType = 5
+            // // 策划说失败的弹窗出现的延迟时间太久了 所以我在这里 进行处理
+            timeNum = gameInfo.failPupopDelayNum;
         }
+
+        
         //传动给弹窗弹窗分析器 
         setTimeout(()=>{
             this.showPupop(gameType,passNum)
-        },1000)
+        },timeNum)
         
          
     }
@@ -728,7 +863,7 @@ class fruitMachine{
      * @param {object} chooseRwardInfo  
      */
     getShowPupopTyp(passNum,chooseRwardInfo){
-        //0 没有意义   1 试玩成功 2通关成功 3 通关失败 4得到奖品
+        //0 没有意义   1 试玩成功 2通关成功 3 通关失败 4得到奖品 5倒计时结束失败
         let type = 0 ;
         //检测当前是模式  试玩？ 奖品？
         if(chooseRwardInfo.typeOfPlay === rewardList.testPlayType){
@@ -753,7 +888,7 @@ class fruitMachine{
     }
     /**
      * 展示相关的弹窗
-     * @param {number} num  0 没有意义   1 试玩成功 2通关成功 3 通关失败 4得到奖品
+     * @param {number} num  0 没有意义   1 试玩成功 2通关成功 3 通关失败 4得到奖品 5倒计时结束失败
      * @param {number} passNum 当前的关卡数
      */
     showPupop(num,passNum){
@@ -763,9 +898,11 @@ class fruitMachine{
          
             this.isSuccessPupop(passNum); 
         }else if(num === 3){
-            this.isFailPupop(true); 
+            this.isFailPupop(1,true); 
         }else if(num === 4){
             this.showSuccessGamePupop(true); 
+        }else if(num === 5){
+            this.isFailPupop(2,true); 
         }
 
     }
@@ -857,21 +994,54 @@ class fruitMachine{
     */
     isSuccessPupop(num){   
         let node =  $('#successfulEntry');
+        //三个动态的星星
+        let node_starts1 =  node.find('#pupop-Stars-1');
+        let node_starts2 =  node.find('#pupop-Stars-2');
+        let node_starts3 =  node.find('#pupop-Stars-3');
+        this.pupopAnimation(node);
         $('#popup-num').removeClass().addClass(`pupop_num_${num+1}`);
         node.css('display','inline')
         setTimeout(()=>{ 
             let _num = num + 1 ;
             this.initPassInfo(_num);
-            node.css('display','none') 
+            node.css('display','none');
+            //关掉三个星星
+            node_starts1.css('display','none');
+            node_starts2.css('display','none');
+            node_starts3.css('display','none');
         },2000); 
-        console.log('玩家通关 这边需要初始化通关的相关信息')
+        let animationType = 'zoomInDown';//被使用的动画类型
+        //延时出现动画
+        this.startsSetTimeout(node_starts1,animationType,700)
+        this.startsSetTimeout(node_starts2,animationType,800)
+        this.startsSetTimeout(node_starts3,animationType,900)
+    }
+    /**
+     * 显示星星的倒计时
+     * @param {objject} node  节点
+     * @param {string} animationType 动画类型
+     * @param {number} timeNum 时间
+     */
+    startsSetTimeout(node,animationType,timeNum=100){
+        setTimeout(()=>{
+            node.css('display','inline');
+            this.nodeAnimation(node,animationType,250)
+        },timeNum)
+        
     }
     /**
      * 展示失败的弹窗
+     * @param {number}  typeNum 失败的类型
      * @param {boolean} bool 
      */
-    isFailPupop(bool=false){
+    isFailPupop(typeNum,bool=false){
         let node = $('#fail-game-pupop');
+        let pupopClass = 'pass-game-fail'
+        if(typeNum === 2){
+            pupopClass = 'pass-time-over'
+        }
+        node.find('#popup').removeClass().addClass(pupopClass);
+        this.pupopAnimation(node);
         if(bool){
             node.css('display','inline')
         }else{
@@ -884,6 +1054,7 @@ class fruitMachine{
     */
     showTestGamePupop(bool=false){
         let node = $('#test-game-pupop');
+        this.pupopAnimation(node);
         if(bool){
             node.css('display','inline')
         }else{
@@ -896,6 +1067,7 @@ class fruitMachine{
      */
     showSuccessGamePupop(bool = false){
         let node = $('#success-game-pupop');
+        this.pupopAnimation(node);
         if(bool){
             node.css('display','inline')
         }else{
@@ -903,7 +1075,50 @@ class fruitMachine{
         } 
     }
     /**
-     * 关闭当前所有的弹窗
+     * 显示当前的挽留弹窗
+     * @param {boolean} bool 
+     */
+    showStandPupop(bool = false){
+        localStorage.standBtnTopNum--;
+        let node = $('#stand-pupop'); 
+        this.pupopAnimation(node);
+        if(bool){ 
+            node.css('display','inline')
+        }else{
+            node.css('display','none')
+        } 
+        //将数据进行保存
+        this.setlocalData();
+    }
+    /**
+     * 显示出来规则的弹窗
+     * @param {boolean} bool 
+     */
+    showRulePupop(bool = false){
+        let node = $('#rule-pupop'); 
+        this.pupopAnimation(node);
+        if(bool){ 
+            node.css('display','inline')
+        }else{
+            node.css('display','none')
+        }  
+    }
+    /**
+     * 玩家奖励的列表显示
+     * @param {boolean} bool 
+     */
+    rewardListPupop(bool = false){
+        let node = $('#winning-record-pupop'); 
+        this.pupopAnimation(node);
+        if(bool){ 
+            node.css('display','inline')
+        }else{
+            node.css('display','none')
+        }  
+    }
+
+    /**
+     * 关闭游戏中的所有的弹窗
      */
     closeAllPupop(){
         $('#test-game-pupop').css('display','none');
@@ -984,16 +1199,6 @@ class fruitMachine{
         } 
      
     }
-    // useSpeedProp(num){
-    //     slowDownPropInfo.useStatus=num;
-    //     if(num === 1){
-    //         $('#speed-reduction').removeClass().addClass('speed-reduction-y');
-    //     }else if(num === 2){//使用过了就去掉按钮的事件
-    //         $('#speed-reduction').off();
-    //         $('#speed-reduction').removeClass().addClass('speed-reduction-n');
-    //     } 
-     
-    // }
     //帧循环事件
     updata(){ 
         window.requestAnimationFrame(this.updata.bind(this));
@@ -1026,17 +1231,151 @@ class fruitMachine{
             this.knifeNumArry.push(this.knife);
         })
     }
+    /**
+     * 修改当前的转动的方向与速度 
+     */
+    changeSpeed(){  
+        //停止倒计时
+        if(this.timerFun) clearTimeout(this.timerFun);
 
+       
+        let  timeNum = slowDownPropInfo.timeNumList[localStorage.passNum-1]; 
+        let timer =  this.randomFrom( timeNum[0],timeNum[1] );
+        // console.log('转动内容进行调整',timer,'范围是:',timeNum,)
+        // console.log('当前的倒计时是:',timer);
+        //当前的基础转速是多少
+        let _num = this.randomFrom(slowDownPropInfo.speedScope[0]*10,slowDownPropInfo.speedScope[1]*10)/10;
+        //随机旋转的方向  可以增加一个条件  就是 连续几次相同的方向后 后一个是相反反向 或者是权重加大
+        let _rotaotion = this.randomFrom(0,10) >= 5 ? -1 : 1;
+        slowDownPropInfo.normalSpeed = _num*_rotaotion;  
+
+      
+        this.timerFun = setTimeout(()=>{
+            this.changeSpeed();
+        },timer) 
+    }
+
+    /**
+     * 图片的方式显示警告
+     * @param {number} type  -1 是什么都不显示    1->2 是提示的编码
+     */
+    showImgWaring(type){
+        let node = $('#waring-box');
+        
+        node.removeClass();
+        if(type === -1){
+            return;
+        }
+        if(type===1){
+            node.addClass('waring-img-1')
+        }else if(type===2){
+            node.addClass('waring-img-2')
+        } 
+    }
     //------------------------公共方法-----------------
+    /**
+     *  提示文本框
+     * @param {string} content 
+     */
+    showTipsBox(content){
+        let node = $('#tips-box');
+        node.text(content);
+        node.css('display','inline');
+        setTimeout(()=>{ 
+            node.css('display','none');
+        },2000);
+    }
+
+    /**
+     * 大转盘的转动动画
+     */
+    jumpAnimation(){ 
+        let node =  $('#turntable');
+      
+        $(function(){ 
+            node.addClass('animationJump hit-jump-animation');
+            setTimeout(function(){ 
+                node.removeClass('hit-jump-animation');
+            }, 1000);
+        });
+    }
+
+    /**
+     * 传入相关天窗的node节点显示使用相关的动画
+     * @param {object} node 
+     */
+    pupopAnimation(nodeObj){
+        let node =  $(nodeObj).find('#pupop-bg-box');
+        $(function(){
+            node.addClass('animated bounceInUp');
+            setTimeout(function(){
+                node.removeClass('bounceInUp');
+            }, 1000);
+        });
+    }
+
+    /**
+     * 添加动画  
+     * @param {object} nodeObj 动画的node
+     * @param {string} animation 动画的类型
+     * @param {number} time //动画的时间
+     */
+    nodeAnimation(nodeObj,animation,time = 1000,BACK){ 
+        $(function(){ 
+            nodeObj.addClass(`animated-starts  ${animation}`); 
+            setTimeout(function(){  
+                nodeObj.removeClass(animation);
+                if(BACK!=null){
+                    BACK();
+                }
+            }, time);
+        });
+    }
+    //获取指定区间范围随机数，包括lowerValue<=x<=upperValue
+    /**
+     * 传入取到相关参数
+     * @param Min
+     * @param Max
+     * @returns {*}
+     */
+    randomFrom(Min, Max) {
+        var Range = Max - Min;
+        var Rand = Math.random();
+        var num = Min + Math.floor(Rand * Range);  //舍去
+        return num;
+
+    }
     /**
      * 看视频的接口
      */
     watchVideosSDK(num,BACKOK=null){
-        console.log('观看视频');
+        watchVideosType.changeType = num;
+     
         if(BACKOK!=null){
-            BACKOK();
+            watchVideosType.watchVideoCallBack = BACKOK;
         }
+        console.log('对视频进行拉取的请求')
+        //请求视频的播放
+        // location.href='qtj://profession/loadCAJVideo'
+        // window.location.href="qtj://profession/playH5Video?url="
+        // console.log('thia.watchVideosBtnEvent',this.watchVideosBtnEvent);
+        this.watchVideosBtnEvent();
+       
     } 
+    /**
+     * 初始化视频的回调
+     */
+    initVideosSDKBack(){
+        //在window上挂在视频看完的回调
+        window._videoCallback = function(){
+            //回到函数不为空就调取这个函数
+            if(watchVideosType.watchVideoCallBack!=null){
+                watchVideosType.watchVideoCallBack();
+                console.log('视频回到成功',watchVideosType.watchVideoCallBack)
+            } 
+        }
+    }
+
     /**
      * 增加或者减少体力使用的
      * @param {number} num 这个可以正数  可以负数
@@ -1049,6 +1388,7 @@ class fruitMachine{
             strengthNum = 0;
         }
         this.strengthNum = strengthNum;
+        console.log('用户当前的相关体力值发生改变-',num >= 0 ?  '增加了:':'减少了:',Math.abs(num));
     }
     /**
      * 封装使用数据驱动
@@ -1134,11 +1474,12 @@ class fruitMachine{
             localStorage.lastTime = lsstTimeInfo_;
             //建立储存
             let storage = window.localStorage;
+            localStorage.strengthNum = this.strengthNum
             // console.log('storage:',storage);
             let _localStorage = JSON.stringify(localStorage);
             //写入W105SINFO字段
             storage[gameInfo.key] = _localStorage; 
-            // console.log('储存本地的数据2',_localStorage);
+            console.log('储存本地的数据2',_localStorage);
         }
     }
     /**
@@ -1156,14 +1497,8 @@ class fruitMachine{
            if(this.isSameDay(userData_.lastTime,new Date())){
                 localStorage = userData_;
                 console.log('本地的相关数据是:',localStorage);
-           }
-        //    else{
-        //     console.log('本地储存的数据没有取到');
-        //    } 
-        } 
-        // else {
-        //     console.log('本地储存的数据没有取到');
-        // }
+           }  
+        }  
     }
     /**
      * 检测是不是统一
@@ -1224,9 +1559,9 @@ class fruitMachine{
             listNum = 6785;
         }
         let text_3 = '***';
-        let getMoneyNum = Math.floor(Math.random()*5) ;
+        let getMoneyNum = Math.floor(Math.random()*gameInfo.redMoney.length) ;
         getMoneyNum = gameInfo.redMoney[getMoneyNum];
-        let redNumText = '获得'+getMoneyNum+'元红包';
+        let redNumText = '获得'+getMoneyNum;
         return {
             context1:text_1+text_2.toString()+text_3+listNum.toString(),
             context2: redNumText,
@@ -1281,7 +1616,7 @@ class fruitMachine{
         //将当前的大专篇关闭掉 动画结束再打开
         this.showTurntableBox(false);
         //设置动画的回调
-        this.turntableAni_right.  AnimationOver(()=>{
+        this.turntableAni_right.AnimationOver(()=>{
             console.log('动画结束了')
             this.showTurntableDoAniPage(false);
             // this.showTurntableBox(true);
@@ -1308,8 +1643,7 @@ class fruitMachine{
     showTurntableBox(bool = false){
         let node1 = $('#turntable-box');
         let node2 = $('#turntable-box-T');
-        if(bool){
-            console.log('打开:',bool);
+        if(bool){ 
             node1.css('display','inline');
             node2.css('display','inline');
         }else{
@@ -1317,7 +1651,60 @@ class fruitMachine{
             node2.css('display','none');
         }
     }
+     /**
+     * 埋点的处理  
+     * @param {numder} num 3页面曝光  4页面埋点
+     */
+    sendPonit(num) {
+     
+        if ( this.countinfoPoint === undefined || this.countinfoPoint === null || this.countinfoPoint === '' ) { 
+            const envType = process.env.NODE_ENV === 'production' ? true : false;//设置当前的环境 是生产环境还是测试环境
+            this.countinfoPoint = new countinfoPoint(envType)
+        } 
+        this.countinfoPoint.countinfoPoint(num);
+    }
+    getURLParameter(){
+        var url = location.href;
+        // console.log('url:', location.href);
+        var theRequest = new Object();
+        if (url.indexOf("?") != -1) {
+            var str = url.split('?')[1];
+            str = str.split('#')[0];
+            var strs = str.split("&");
+            for (var i = 0; i < strs.length; i++) {
+                theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
 
+            }
+        }
+        return theRequest||null;
+    }
+    /**
+     * @param {function} fun 调用函数
+     * @param {number} delay 延迟调用时间
+     * @param {array} args 剩余参数
+     */
+    throttle(fun, delay, ...args) {
+        let last = null;
+        return (...rest) => {
+            const now = + new Date();
+            let _args = [...args, ...rest];
+            if (now - last > delay) {
+                fun.apply(null, _args);
+                last = now;
+            }
+        }
+    }
     
 }
-new fruitMachine();
+let _fruitMachine  = new fruitMachine();
+// pushHistory(); 
+// window.addEventListener("popstate", function(e) { 
+//     　　_fruitMachine.showStandPupop(true);
+// }, false); 
+// function pushHistory() { 
+// 　　var state = { 
+// 　　　　title: "title", 
+// 　　　　url: "#"
+// 　　}; 
+// 　　window.history.pushState(state, "title", "#"); 
+// }
